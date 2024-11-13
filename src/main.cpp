@@ -9,7 +9,7 @@
 #include "field.h"
 
 int main(){
-    int start[9] = {0,1,2,3,4,5,7,6,8};
+    std::array<int,9> start = {0,1,2,3,4,5,7,6,8};
     field f(start);
     f.print();
 }

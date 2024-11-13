@@ -8,14 +8,11 @@
  * 
  */
 #include "field.h"
+#include <array>
 #include <iostream>
 using namespace std;
 
-field::field(int a[9]) : movecount{0} {
-    for(int i = 0; i < 9;i++){
-        fieldArray[i] = a[i];
-    }
-}
+field::field(std::array<int,9> &a) : movecount{0}, fieldArray(a){}
 
 void field::print(){
     for(int i = 0; i< 3; i++){
