@@ -29,3 +29,10 @@ void field::print(){
     cout << "Move: " << movecount << endl;
 }
 
+bool field::is_solved(){
+    std::array<int,9> winState_A = {1,2,3,8,0,4,7,6,5};
+    std::array<int, 9> winState_B = {0,1,2,3,4,5,6,7,8};
+
+    return(fieldArray == winState_A || fieldArray == winState_B);
+}
+

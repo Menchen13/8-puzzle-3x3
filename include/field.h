@@ -49,5 +49,14 @@ public:
      */
     void print();
 
+    /**
+     * @brief Returns true if the puzzle is solved, according to the solve states
+     * \image latex ../image/Goal_States.png "Goal States"
+     * 
+     * @return true 
+     * @return false 
+     */
+    bool is_solved();
+
 };
 #endif //_field_
