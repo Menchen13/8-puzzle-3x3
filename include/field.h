@@ -11,6 +11,12 @@
 
 #include <corecrt.h>
 #include <array>
+enum direction {
+    up,
+    down,
+    left,
+    right
+};
 
 class field
 {
@@ -24,6 +30,11 @@ private:
      * @brief internal variable to hold the amout of moves mode during the game
      */
     size_t movecount;
+
+    int zeroPos;
+
+    
+    bool is_legal(direction);
 public:
 
     /**
@@ -33,7 +44,8 @@ public:
     field();
     /**
      * @brief Construct a new field object with the passed in array as a starting point
-     * 
+     * @note this expects the starting point to be a valid configuration and is mainly
+     * intended for debugging
      */
     explicit field(std::array<int, 9> &a);
     /**
@@ -57,6 +69,8 @@ public:
      * @return false 
      */
     bool is_solved();
+
+    bool move(direction);
 
 };
 #endif //_field_
