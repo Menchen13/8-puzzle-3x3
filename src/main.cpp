@@ -6,10 +6,12 @@
  * 
  */
 #include <iostream>
-#include "field.h"
+#include "node.h"
+#include "solver.h"
 
 int main(){
-    std::array<int,9> start = {0,1,2,3,4,5,7,6,8};
-    field f(start);
-    f.print();
+    std::array<int,9> start = {8,2,4,0,3,1,6,5,7};
+    Node* startNode = new Node(start);
+    solve(startNode);
+
 }
