@@ -49,7 +49,7 @@ void solve(Node* start, T comp){
         for(auto direction: directions){
             //only generate nodes for "legal" moves
             if(current->is_legal(direction)){
-                //use current node as base and set parent to current
+                //use current node as base
                 Node* child = new Node(*current);
 
                 //set current node as parent for child node
