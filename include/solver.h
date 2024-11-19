@@ -19,9 +19,20 @@ struct Greedy{
 };
 
 //function to solve from a given start node
-//this function is in the header cause it was the only way i could get this template shenanigans work ¯\_(ツ)_/¯
+//this function is in the header cause it was the only way i could get these template shenanigans to work ¯\_(ツ)_/¯
 template<typename T>
 void solve(Node* start, T comp){
+
+    //function pointer to be used for calculating the cost of a node
+    void (*calc_cost)(Node*);
+
+    //set function pointer to calc_cost function based on goal_state
+    //thought this would better performance drasticly, but in the end it was just an excuse to learn about function pointers and friendly methods
+    calc_cost = (start->get_goal_state() == B) ? calc_cost_B : calc_cost_A;
+
+    //calculate cost for start Node, now that goal state has been determined
+    calc_cost(start);
+
     //Priority queue of generated nodes.
     std::priority_queue<Node*, std::vector<Node*>, T> pq(comp);
 
@@ -59,7 +70,7 @@ void solve(Node* start, T comp){
                 child->move(direction);
 
                 //calculate new cost of the field and update attribute of child node
-                child->calc_cost();
+                calc_cost(child);
                 
                 //add child node to the queue
                 pq.push(child);
@@ -67,6 +78,5 @@ void solve(Node* start, T comp){
         }
     }
 }
-
 
 #endif //_SOLVER_

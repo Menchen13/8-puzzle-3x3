@@ -8,14 +8,15 @@
  * 
  */
 #include "node.h"
+
 #include <array>
 #include <iostream>
 #include <cmath>
+#include <algorithm>
 #include <utility>
 using namespace std;
 
-Node::Node(std::array<int,9> &a) : movecount{0}, fieldArray(a), parent{nullptr}{
-    calc_cost();
+Node::Node(std::array<int,9> &a) : movecount{0}, fieldArray(a), cost{0}, parent{nullptr}{
     for(int i = 0; i < 9; i++){
         if(fieldArray[i] == 0){
             zeroPos = i;
@@ -26,13 +27,42 @@ Node::Node(std::array<int,9> &a) : movecount{0}, fieldArray(a), parent{nullptr}{
 
 Node::Node(const Node& other): fieldArray{other.fieldArray}, movecount{other.movecount}, zeroPos{other.zeroPos}, cost{other.cost}, parent{other.parent} {}
 
-void Node::calc_cost(){
-    cost = 0;
-    for(int i = 0; i < 9; i++){
-        int distance = abs(i - fieldArray[i]);
-        cost += (distance / 3) + (distance % 3);
-
+void calc_cost_A(Node* node){
+    // indices of numbers in goal state: {1,2,3,8,0,4,7,6,5}
+    // Example: 0 is at index 4 in goal state therefore goal_State_indices[0] = 4
+    std::array<int, 9> goal_State_indices = {4, 0, 1, 2, 5, 8, 7, 6, 3};
+    node->cost = 0;
+    for (int i = 0; i < 9; i++)
+    {
+        int distance = abs(i - goal_State_indices[node->fieldArray[i]]);
+        node->cost += (distance / 3) + (distance % 3);
     }
+}
+
+void calc_cost_B(Node* node){
+    // no goal_state_indices array needed as it would just be comprised of the indexes themself
+    node->cost = 0;
+    for (int i = 0; i < 9; i++)
+    {
+        int distance = abs(i - node->fieldArray[i]);
+        node->cost += (distance / 3) + (distance % 3);
+    }
+}
+
+const Goal_States Node::get_goal_state(){
+    int count{0};
+    for(int i = 0; i < 8; i++){
+        
+        //if empty or 1 no squares can be of a lower number
+        if(fieldArray[i] == 1 || fieldArray[i] == 0) continue;
+
+        for(int j = i + 1; j < 9; j++){
+            if((fieldArray[j] != 0) && (fieldArray[i] > fieldArray[j])) count++;
+        }
+    }
+
+    //if count is even goal_state B is reachable, if odd A
+    return (count % 2 == 0) ? Goal_States::B : Goal_States::A;
 }
 
 void Node::print_field(){
