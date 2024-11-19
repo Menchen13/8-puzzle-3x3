@@ -5,18 +5,26 @@
 #include <random>
 
 //returns true if the array contains a legal field
+//needed for player input validation
 bool legal_field(std::array<int, 9> field);
+
+//generates a random and legal playing field
+//used if the player doesnt provide a starting field
 std::array<int, 9 > random_field();
 
 int main(){
-    auto field = random_field();
-    Node * test = new Node(field);
-    test->print_field();
-    solve(test, A_star{});
+    // auto field = random_field();
+    // Node * test = new Node(field);
+    // test->print_field();
+    // solve(test, A_star{});
 
-    // std::array<int,9> start = {8,0,4,6,3,7,5,2,1};
-    // Node* startNode = new Node(start);
-    // solve(startNode, A_star{});
+    std::array<int,9> start = {2,8,3,1,6,4,7,0,5};
+    if(!legal_field(start)){
+        std::cout << "Illegal starting field detected!!!\nExiting" << std::endl;
+        return -2;
+    }
+    Node* startNode = new Node(start);
+    solve(startNode, A_star{});
 
 }
 

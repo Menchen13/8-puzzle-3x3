@@ -11,6 +11,14 @@
 
 #include <array>
 #include <stddef.h>
+
+//enum of goal States to solve for, needed for template of calc_cost()
+enum Goal_States{
+    A,
+    B
+};
+
+//enum of directions the empty square can move
 enum direction {
     up,
     down,
@@ -53,7 +61,12 @@ public:
     ~Node() = default;
 
     // Calculate the heuristic cost of the node using manhattan distance and set attribute cost
-    void calc_cost();
+    //one function for each goal_state, to avoid comarisons in function body. external functions so i can use the funtion pointer easily
+    friend void calc_cost_A(Node *);
+    friend void calc_cost_B(Node *);
+
+    //returns the goal_state the current board is solvable for
+    const Goal_States get_goal_state();
 
     //returns the heuristically calculated cost of the field
     int get_cost() const;
@@ -77,4 +90,8 @@ public:
     void print_field();
 
 };
+
+
+void calc_cost_B(Node* node);
+void calc_cost_A(Node* node);
 #endif //_field_
