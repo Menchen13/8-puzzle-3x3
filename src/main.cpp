@@ -15,15 +15,15 @@ std::array<int, 9 > random_field();
 
 //exit codes
 //-1 bad starting field
-//-2 bad search strategie flags
+//-2 bad search strategy flags
 int main(int argc, char* argv[]){
     //comandline argument parsing using CLI11
-    CLI::App app{"A Programm to solve the 8-puzzle problem for my lecture", "8-puzzle"};
+    CLI::App app{"A Programm to solve the 8-puzzle problem for my lecture!\nIf no starting_field is provided a random one will be generated", "8-puzzle"};
 
     bool A = false;
     bool G = false;
-    app.add_flag("-a", A, "Use A* search strategie(default)");
-    app.add_flag("-g", G, "Use greedy search strategie");
+    app.add_flag("-a", A, "Use A* search strategy(default)");
+    app.add_flag("-g", G, "Use greedy search strategy");
 
     std::string starting_field;
     app.add_option("starting_field", starting_field, "Optional input: A field for the programm to start from. Example: 324015786");
@@ -64,7 +64,7 @@ int main(int argc, char* argv[]){
     //create start Node with field
     Node* start = new Node(field);
 
-    //start the solver based on search strategie flags
+    //start the solver based on search strategy flags
 
     //if both flags are set exit with error code -2
     if(A && G){
@@ -73,11 +73,11 @@ int main(int argc, char* argv[]){
     }
     //if -g is used start solve with greedy
     if(G){
-        std::cout << "Solving with greedy! This might brick your PC if you dont have a lot of RAM!" << std::endl;
+        std::cout << "Solving with greedy! This might brick your PC if you dont keep an eye on your RAM!" << std::endl;
         solve(start, Greedy{});
     }
     //else start solve with A*
-    //this includes the default case, where no flag was parsed
+    //this includes the default case, where no search strategy flag was passed
     else{
         solve(start, A_star{});
     }
@@ -86,8 +86,9 @@ int main(int argc, char* argv[]){
 bool legal_field(std::array<int, 9> field){
     //create checklist and set all elemets to false
     bool accounted[9] = {};
-
+    
     for(auto i: field){
+        //illegal number
         if(i < 0 || i > 8){
             return false;
         }
@@ -102,7 +103,8 @@ bool legal_field(std::array<int, 9> field){
 }
 
 std::array<int, 9> random_field(){
-   std::array<int, 9> field = {0,1,2,3,4,5,6,7,8}; 
+    //create a valid, random field, by shuffeling a valid field array.
+    std::array<int, 9> field = {0, 1, 2, 3, 4, 5, 6, 7, 8};
     std::random_device rd;
     std::mt19937 g(rd());
     std::shuffle(field.begin(), field.end(), g);

@@ -12,7 +12,8 @@
 #include <array>
 #include <stddef.h>
 
-//enum of goal States to solve for, needed for template of calc_cost()
+//enum of goal states to solve for
+//refers to the goal states in the README
 enum Goal_States{
     A,
     B
@@ -44,28 +45,32 @@ private:
     //the heuristic system used is manattan distance
     int cost;
 
+    //internal variable to hold the parent node
+    //needed for print_path
     Node* parent;    
 public:
-    //Construct a new field object with the passed in array as a starting point
+    //Construct a new field object with the passed array as a starting point.
+    //initialises the fieldArray and zeroPos. All other attributes are set to zero.
     //this expects the starting point to be a valid configuration.
     explicit Node(std::array<int, 9> &a);
 
-    //no default constutor intendet, dont need compiler to create it
+    //no default constutor intended, dont need compiler to create it
     Node() = delete;
 
     //copy constructor
     Node(const Node&);
 
-    //Destroy the field object
     //since no dynamic memory allocation takes place in the class the dtor will be = default
     ~Node() = default;
 
-    // Calculate the heuristic cost of the node using manhattan distance and set attribute cost
-    //one function for each goal_state, to avoid comarisons in function body. external functions so i can use the funtion pointer easily
+    // Calculate the heuristic cost of the node for goal state A using manhattan distance and set cost attribute 
     friend void calc_cost_A(Node *);
+
+    // Calculate the heuristic cost of the node for goal state B using manhattan distance and set cost attribute 
     friend void calc_cost_B(Node *);
 
     //returns the goal_state the current board is solvable for
+    //needed to determine which calc_cost function is to be used
     const Goal_States get_goal_state();
 
     //returns the heuristically calculated cost of the field
@@ -74,16 +79,19 @@ public:
     //returns the movecount to reach the field-state
     int get_movecount() const;
 
-    void set_parent(Node*);
+    //sets parent attribute to p
+    void set_parent(Node* p);
 
-    //returns true if the empty square can move in the direction
+    //returns true if the empty square can move in the direction.
+    //returns false otherwise
     bool is_legal(direction);
 
     //moves the empty space in direction.
+    //assumes the move is legal
     //also updates movecount and zeroPos
     void move(direction);
 
-    //prints the path take to reach the current state.
+    //prints the path taken to reach the current state.
     void print_path();
 
     //prints the fieldArray to stdout
@@ -91,6 +99,7 @@ public:
 
 };
 
+//redeclaring calc_cost functions as external functions
 
 void calc_cost_B(Node* node);
 void calc_cost_A(Node* node);

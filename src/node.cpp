@@ -28,8 +28,8 @@ Node::Node(std::array<int,9> &a) : movecount{0}, fieldArray(a), cost{0}, parent{
 Node::Node(const Node& other): fieldArray{other.fieldArray}, movecount{other.movecount}, zeroPos{other.zeroPos}, cost{other.cost}, parent{other.parent} {}
 
 void calc_cost_A(Node* node){
-    // indices of numbers in goal state: {1,2,3,8,0,4,7,6,5}
-    // Example: 0 is at index 4 in goal state therefore goal_State_indices[0] = 4
+    //goal state: {1,2,3,8,0,4,7,6,5}
+    //Example: 0 is at index 4 in goal state therefore goal_State_indices[0] = 4
     std::array<int, 9> goal_State_indices = {4, 0, 1, 2, 5, 8, 7, 6, 3};
     node->cost = 0;
     for (int i = 0; i < 9; i++)
@@ -40,7 +40,7 @@ void calc_cost_A(Node* node){
 }
 
 void calc_cost_B(Node* node){
-    // no goal_state_indices array needed as it would just be comprised of the indexes themself
+    //no goal_state_indices array needed as it would just be comprised of the indices themself
     node->cost = 0;
     for (int i = 0; i < 9; i++)
     {

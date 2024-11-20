@@ -5,6 +5,7 @@
 
 
 //comparator for Nodes
+//implements A* search by sorting nodes by cost + movecount
 struct A_star{
     bool operator()(const Node* Item1, const Node* Item2){
         return((Item1->get_cost() + Item1->get_movecount()) > (Item2->get_cost() + Item2->get_movecount()));
@@ -12,13 +13,14 @@ struct A_star{
 };
 
 //comparator for Nodes
+//implements greedy search by sorting by only cost
 struct Greedy{
     bool operator()(const Node* Item1, const Node* Item2){
         return(Item1->get_cost() > Item2->get_cost());
     }
 };
 
-//function to solve from a given start node
+//function to solve 8-puzzle-problem from a given start node with a given comparator for nodes(search strategie)
 //this function is in the header cause it was the only way i could get these template shenanigans to work ¯\_(ツ)_/¯
 template<typename T>
 void solve(Node* start, T comp){
@@ -34,6 +36,7 @@ void solve(Node* start, T comp){
     calc_cost(start);
 
     //Priority queue of generated nodes.
+    //comparator used decides search strategy
     std::priority_queue<Node*, std::vector<Node*>, T> pq(comp);
 
     //add starting Node to the queue
@@ -50,12 +53,13 @@ void solve(Node* start, T comp){
         pq.pop();
 
         //if the estimated cost of the node is == 0, then it is a goal state.
-        //and if a goal state is the least expensive node, then the optimal solution has been found!
+        //and if a goal state is the least expensive/current node, then the optimal solution has been found!
         if(current->get_cost() == 0){
-            //TODO
+            //print path taken to reach goal and exit
             current->print_path();
             return;
         }
+        
         //iterate over all possible next moves -> all directions for the empty space to move
         for(auto direction: directions){
             //only generate nodes for "legal" moves
