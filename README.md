@@ -16,7 +16,7 @@ verwende daher diese Zielzustände:
 
 2. **Wie werden die Successor Nodes erzeugt?**
 
-    Die Routine zur erzeugung von Successor Nodes ist in der solver.h Datei auf Zeilen 63-83 zu finden. Um alle möglichen Successor Nodes zu erzeugen wird über alle möglichen Zugrichtung des leeren Feldes iteriert und geprüft ob der Zug "legal" ist. Ist der Zug erlaubt wird als Basis für die Successor Node die derzeit untersuchte Node kopiert. Es wird das parent Attribut der Successor node gesetzt und dannach der Zug, zum abändern des States, ausgeführt. Abschließend werden die Kosten der Successor Node berechnet, in dem cost Attribut festgehalten und die Node der Priority-Queue hinzugefügt.
+    Die Routine zur Erzeugung von Successor Nodes ist in der solver.h Datei auf Zeilen 63-83 zu finden. Um alle möglichen Successor Nodes zu erzeugen wird über alle möglichen Zugrichtung des leeren Feldes iteriert und geprüft ob der Zug "legal" ist. Ist der Zug erlaubt wird als Basis für die Successor Node die derzeit untersuchte Node kopiert. Es wird das parent Attribut der Successor node gesetzt und dannach der Zug, zum abändern des States, ausgeführt. Abschließend werden die Kosten der Successor Node berechnet, in dem cost Attribut festgehalten und die Node der Priority-Queue hinzugefügt.
     
 
 3. **Vergleich Verwenden A-star vs. Greedy**
@@ -28,7 +28,7 @@ verwende daher diese Zielzustände:
     Ich verwende zum Brechnen der Kosten einer Node die Manhattan Distanz.
     Diese Kosten-Berechnung ist für beide Zielzustände seperat implementiert und kann in der node.cpp Datei in Zeilen 30-50 gefunden werden.
     Die Funktionen funktionieren im Kern gleich aber verwenden verschiedene Goal_States zur Berechnung. Zuerst wird die Index-Distanz eines Elements zu seiner Ziel-Position berechnet. Diese Index-Distanz wird dann durch drei geteilt und abgerundet um die benötigten vertikalten Schritte des Elements zu seiner Ziel-Position zu berechnen. Um die benötigten horizontalen Schritte eines Elements zu seiner Ziel-Position zu erhalten wird die Index-Distanz mod 3 gerechnet. Diese Beiden Werte, horzontale und vertikale benötigte Schritt-Anzahl werden addiert und bilden die Kosten des einzelnen Elementes.
-    Um die Kosten des gesamten Feldes(der Node) zu erhalten werden also alle Element-Kosten addiert, was mithilfe der for schleife realisiert wird.
+    Um die Kosten des gesamten Feldes(der Node) zu erhalten werden also alle Element-Kosten addiert, was mithilfe der for-Schleife realisiert wird.
 
 5. **Wie ist ihre Goal() Funktion modelliert?**
 

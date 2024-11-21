@@ -1,12 +1,3 @@
-/**
- * @file field.cpp
- * @brief Implementation file for the field class
- * @version 0.1
- * @date 2024-11-12
- * 
- * @copyright Copyright (c) 2024
- * 
- */
 #include "node.h"
 
 #include <array>

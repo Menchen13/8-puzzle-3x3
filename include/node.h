@@ -1,11 +1,3 @@
-/**
- * @file field.h
- * @brief Header File für die field
- * @version 0.1
- * @date 2024-11-12
- * 
- * 
- */
 #ifndef _field_
 #define _field_
 
@@ -34,7 +26,7 @@ private:
     //0-2: row 1; 3-5 row 2; 6-8 row 3
     std::array<int, 9> fieldArray;
     
-    //internal variable to hold the amout of moves mode to reach current field-state
+    //internal variable to hold the amount of moves mode to reach current field-state
     size_t movecount;
 
     //internal variable used to hold the position of the empty square
