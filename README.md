@@ -34,3 +34,10 @@ verwende daher diese Zielzustände:
 
     Meine Goal() Function, welche prüft ob das Probelm gelöst würde, ist in der solver.h Datei in Zeilen 55-61 zu finden. Sie prüft ob die derzeit untersuchte Node einen Zielzustand enthält(cost == 0), ist dies der Fall, wurde eine Lösung für das 8-Puzzle-Problem gefunden und der Pfad zu dieser Node wird ausgegeben. Es ist wichtig anzumerken, dass die derzeit untersuchte Node immer die, nach Suchstrategie definiert, günstigste ist, da sie vom Anfang der, mit der Suchstrategie priorisierten, Priority-Queue genommen wird.
     Somit kann gewährleistet werden, dass z.B. A* immer die optimalste Lösung findet.
+
+
+# Flowchart des Programm
+
+<div align="center">
+  <img src="image/Flowchart 8-puzzle.png" alt="Image description">
+</div>
