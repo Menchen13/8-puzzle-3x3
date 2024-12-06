@@ -3,6 +3,7 @@
 #include "solver.h"
 #include <algorithm>
 #include <random>
+#include <chrono>
 #include <CLI11.hpp>
 
 //returns true if the array contains a legal field
@@ -69,6 +70,7 @@ int main(int argc, char* argv[]){
     //if both flags are set exit with error code -2
     if(A && G){
         std::cout << "Bad search stategie flags! Use at most one flag!" << std::endl;
+        delete start;
         return -2;
     }
     //if -g is used start solve with greedy
@@ -79,7 +81,12 @@ int main(int argc, char* argv[]){
     //else start solve with A*
     //this includes the default case, where no search strategy flag was passed
     else{
+        auto start_time = std::chrono::high_resolution_clock::now();
         solve(start, A_star{});
+        auto end_time = std::chrono::high_resolution_clock::now();
+
+        std::chrono::duration<double> duration = end_time - start_time;
+        std::cout << "Solved in: " << std::setprecision(3) <<duration.count() << " seconds!" << std::endl;
     }
 }
 

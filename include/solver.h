@@ -20,6 +20,7 @@ struct Greedy{
     }
 };
 
+
 //function to solve 8-puzzle-problem from a given start node with a given comparator for nodes(search strategie)
 //this function is in the header cause it was the only way i could get these template shenanigans to work ¯\_(ツ)_/¯
 template<typename T>
@@ -45,18 +46,39 @@ void solve(Node* start, T comp){
     //array to loop over when creating child nodes
     std::array<direction, 4> directions ={direction::up, direction::down, direction::left, direction::right};
 
+    //vector to hold the nodes checked.
+    //this is nessecary to keep track of the pointers for memory safty
+    std::vector<Node*> used;
+
     while(!pq.empty()){
         //always use the node with the lowest estimated cost -> top of the pq
         Node* current = pq.top();
 
         //remove node from list so it doesnt get checked multiple times
         pq.pop();
+        
+        //add Node to the used vector as it wont be found in the pq anymore.
+        used.push_back(current);
 
         //if the estimated cost of the node is == 0, then it is a goal state.
         //and if a goal state is the least expensive/current node, then the optimal solution has been found!
         if(current->get_cost() == 0){
             //print path taken to reach goal and exit
             current->print_path();
+
+            //free memory for Nodes used
+            for (size_t i = 0; i < used.size(); i++){
+                delete used.at(i);
+            }
+
+            //free memory for Nodes still in pq
+            while(!pq.empty()){
+                delete pq.top();
+                pq.pop();
+            }
+            
+            
+
             return;
         }
         
@@ -80,7 +102,7 @@ void solve(Node* start, T comp){
                 pq.push(child);
             }
         }
-    }
+    } //since all start states are solvable the programm can never reach pq.empty() before finding a solution
 }
 
 #endif //_SOLVER_
