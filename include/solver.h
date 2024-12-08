@@ -2,6 +2,7 @@
 #define _SOLVER_
 #include "node.h"
 #include <queue>
+#include <unordered_set>
 
 
 //comparator for Nodes
@@ -20,11 +21,33 @@ struct Greedy{
     }
 };
 
+struct Arrayhash {
+    std::size_t operator()(const std::array<int, 9>& arr) const{
+        std::size_t hashValue = 0;
+        for(const int& elem : arr){
+            //custom hash function for the field array using magic number for 32-integers and bitshiftss
+            hashValue ^= std::hash<int>()(elem) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
+        }
+        return hashValue;
+    }
+};
 
 //function to solve 8-puzzle-problem from a given start node with a given comparator for nodes(search strategie)
 //this function is in the header cause it was the only way i could get these template shenanigans to work ¯\_(ツ)_/¯
 template<typename T>
 void solve(Node* start, T comp){
+
+
+    //Priority queue of generated nodes.
+    //comparator used decides search strategy
+    std::priority_queue<Node*, std::vector<Node*>, T> pq(comp);
+
+    //vector to hold the nodes checked.
+    //this is nessecary to keep track of the pointers for memory safety
+    std::vector<Node*> used;
+
+    //hashset to store already seens states
+    std::unordered_set<std::array<int,9>, Arrayhash> seen;
 
     //function pointer to be used for calculating the cost of a node
     void (*calc_cost)(Node*);
@@ -36,9 +59,6 @@ void solve(Node* start, T comp){
     //calculate cost for start Node, now that goal state has been determined
     calc_cost(start);
 
-    //Priority queue of generated nodes.
-    //comparator used decides search strategy
-    std::priority_queue<Node*, std::vector<Node*>, T> pq(comp);
 
     //add starting Node to the queue
     pq.push(start);
@@ -46,9 +66,7 @@ void solve(Node* start, T comp){
     //array to loop over when creating child nodes
     std::array<direction, 4> directions ={direction::up, direction::down, direction::left, direction::right};
 
-    //vector to hold the nodes checked.
-    //this is nessecary to keep track of the pointers for memory safty
-    std::vector<Node*> used;
+
 
     while(!pq.empty()){
         //always use the node with the lowest estimated cost -> top of the pq
@@ -59,6 +77,9 @@ void solve(Node* start, T comp){
         
         //add Node to the used vector as it wont be found in the pq anymore.
         used.push_back(current);
+
+        //add the state of a checked node into the hashset
+        seen.insert(current->get_fieldArray());
 
         //if the estimated cost of the node is == 0, then it is a goal state.
         //and if a goal state is the least expensive/current node, then the optimal solution has been found!
@@ -89,11 +110,19 @@ void solve(Node* start, T comp){
                 //use current node as base
                 Node* child = new Node(*current);
 
+                //make move on the board, this automatically increments the movecount.
+                child->move(direction);
+
+                //if child state has been seen before dont add it to pq and free memory
+                if(seen.find(child->get_fieldArray()) != seen.end()){
+                    //free memory
+                    delete child;
+                    continue;
+                }
+
                 //set current node as parent for child node
                 child->set_parent(current);
 
-                //make move on the board, this automatically increments the movecount.
-                child->move(direction);
 
                 //calculate new cost of the field and update attribute of child node
                 calc_cost(child);

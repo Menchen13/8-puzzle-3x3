@@ -72,6 +72,10 @@ void Node::print_field(){
     cout << "Cost: " << cost << endl;
 }
 
+std::array<int,9> Node::get_fieldArray(){
+    return fieldArray;
+}
+
 int Node::get_cost() const{
     return cost;
 }

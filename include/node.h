@@ -65,6 +65,8 @@ public:
     //needed to determine which calc_cost function is to be used
     const Goal_States get_goal_state();
 
+    std::array<int, 9> get_fieldArray();
+
     //returns the heuristically calculated cost of the field
     int get_cost() const;
 

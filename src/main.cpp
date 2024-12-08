@@ -75,8 +75,12 @@ int main(int argc, char* argv[]){
     }
     //if -g is used start solve with greedy
     if(G){
-        std::cout << "Solving with greedy! This might brick your PC if you dont keep an eye on your RAM!" << std::endl;
+        auto start_time = std::chrono::high_resolution_clock::now();
         solve(start, Greedy{});
+        auto end_time = std::chrono::high_resolution_clock::now();
+
+        std::chrono::duration<double> duration = end_time - start_time;
+        std::cout << "Solved in: " << std::setprecision(3) <<duration.count() << " seconds!" << std::endl;
     }
     //else start solve with A*
     //this includes the default case, where no search strategy flag was passed
