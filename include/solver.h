@@ -36,7 +36,8 @@ struct Arrayhash {
 //this function is in the header cause it was the only way i could get these template shenanigans to work ¯\_(ツ)_/¯
 template<typename T>
 void solve(Node* start, T comp){
-
+    //variable to keep track of amount skipped Nodes
+    size_t skipped{0};
 
     //Priority queue of generated nodes.
     //comparator used decides search strategy
@@ -86,6 +87,10 @@ void solve(Node* start, T comp){
         if(current->get_cost() == 0){
             //print path taken to reach goal and exit
             current->print_path();
+            std::cout << "Total Nodes generated: " << used.size() + pq.size()
+            << "\nNumber of Nodes skipped using Hashset: " << skipped
+            << "\nNumber of checked Nodes: " << used.size()
+            << "\nNumber of Nodes still in PQ: " << pq.size() << std::endl;
 
             //free memory for Nodes used
             for (size_t i = 0; i < used.size(); i++){
@@ -97,9 +102,7 @@ void solve(Node* start, T comp){
                 delete pq.top();
                 pq.pop();
             }
-            
-            
-
+        
             return;
         }
         
@@ -115,8 +118,8 @@ void solve(Node* start, T comp){
 
                 //if child state has been seen before dont add it to pq and free memory
                 if(seen.find(child->get_fieldArray()) != seen.end()){
-                    //free memory
                     delete child;
+                    skipped++;
                     continue;
                 }
 

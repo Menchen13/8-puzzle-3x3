@@ -1,43 +1,42 @@
-# 8-puzzle: Ein Program zum lösen des 8-Puzzle-Problems.
-Dieses Programm ist als Prüfungsleistung für meinen Kurs "Einführung Artificial Intelligence" an der Leibiz-FH erstellt worden.
-Es kann mithilfe des CMakeLists.txt Files gebaut werden und -h,--help gibt eine Nutzungsanleitung aus.
+# 8-Puzzle: Ein Programm zum Lösen des 8-Puzzle-Problems
+Dieses Programm wurde als Prüfungsleistung für meinen Kurs "Einführung in Artificial Intelligence" an der Leibniz-FH erstellt.
+Es kann mithilfe der `CMakeLists.txt`-Datei gebaut werden, und mit `-h` oder `--help` wird eine Nutzungsanleitung ausgegeben.
 
-Zum Parsen der command line arguments wird [CLI11](https://github.com/CLIUtils/CLI11?tab=readme-ov-file#license) verwendet.
+Zum Parsen der Kommandozeilenargumente wird [CLI11](https://github.com/CLIUtils/CLI11?tab=readme-ov-file#license) verwendet.
 
 ## Spezifikation
-Ich habe mich für die Spezielle Defintion des 8-Puzzle-Problems dieser [Seite](https://www.8puzzle.com/8_puzzle_problem.html) entschieden und
-verwende daher diese Zielzustände:
+Ich habe mich für die spezielle Definition des 8-Puzzle-Problems auf dieser [Seite](https://www.8puzzle.com/8_puzzle_problem.html) entschieden und verwende daher die folgenden Zielzustände:
 ![Goal States](image/Goal_States.png)
 
 # Fragen des Dozenten
 1. **Wie ist ein Node modelliert?**
 
-    Eine Node ist als Klasse modelliert. Dies ermöglicht es mir wichtige Attribute wie den State(fieldArray), Schrittzähler(movecount) und die Kosten(cost) zu kapseln und über Methoden der Klasse zu ändern/verwenden. Alle Attribute und Methoden Deklarationen können in der node.h Datei gefunden werden. Die dazugehörigen Implementirungen sind in der node.cpp Datei angesammelt.
+    Ein Node ist als Klasse modelliert. Dies ermöglicht es mir, wichtige Attribute wie den State (`fieldArray`), den Schrittzähler (`moveCount`) und die Kosten (`cost`) zu kapseln und über Methoden der Klasse zu ändern oder zu verwenden. Alle Attribute und Methodendeklarationen können in der `node.h`-Datei gefunden werden. Die dazugehörigen Implementierungen sind in der `node.cpp`-Datei zu finden.
 
 2. **Wie werden die Successor Nodes erzeugt?**
 
-    Die Routine zur Erzeugung von Successor Nodes ist in der solver.h Datei auf Zeilen 63-83 zu finden. Um alle möglichen Successor Nodes zu erzeugen wird über alle möglichen Zugrichtung des leeren Feldes iteriert und geprüft ob der Zug "legal" ist. Ist der Zug erlaubt wird als Basis für die Successor Node die derzeit untersuchte Node kopiert. Es wird das parent Attribut der Successor node gesetzt und dannach der Zug, zum abändern des States, ausgeführt. Abschließend werden die Kosten der Successor Node berechnet, in dem cost Attribut festgehalten und die Node der Priority-Queue hinzugefügt.
-    
+    Die Routine zur Erzeugung von Successor Nodes ist in der `solver.h`-Datei in den Zeilen 109-136 zu finden. Um alle möglichen Successor Nodes zu erzeugen, wird über alle möglichen Zugrichtungen des leeren Feldes iteriert und geprüft, ob der Zug "legal" ist. Ist der Zug erlaubt, wird als Basis für die Successor Nodes die derzeit untersuchte Node kopiert.
+    Der Zug wird ausgeführt und der resultierende State gegen ein Hash-Set der bereits gesehenen States geprüft. Ist der State im Hash-Set, wurde er bereits überprüft und die Node wird verworfen/der State übersprungen. Ist er nicht im Hash-Set, wird das Parent-Attribut der Successor Node gesetzt, die Kosten berechnet und die Node der  Priority-Queue hinzugefügt.
 
-3. **Vergleich Verwenden A-star vs. Greedy**
+3. **Vergleich: Verwendung von A-Star vs. Greedy**
 
-    Ich habe für beide Suchstrategien einen Komparator für die Priority-Queue geschrieben. Diese sind in solver.h in Zeilen 7-21 zu finden. Die verwendete Suchstrategie kann mithilfe der "-a" und "-g" command line flags ausgewählt werden. Wird keine der Flagen verwendet defaultet das Programm zu der A* Suchstrategie, da in meinen Tests(Windows 11 mit 16GB RAM) die Greedy Suchstrategie, mit den verfügbaren Ressourcen, nicht immer zu einem Ergebniss kam(Der PC gebrickt wurde). 
+    Ich habe für beide Suchstrategien einen Komparator für die Priority-Queue geschrieben. Diese sind in der `solver.h`-Datei in den Zeilen 8–22 zu finden. Die verwendete Suchstrategie kann mit den Flags `-a` und `-g` der Kommandozeile ausgewählt werden. Wird keine der Flags verwendet, verwendet das Programm standardmäßig die A*-Suchstrategie.
+    In meinen Tests ist die A* Suchstrategie im Durchschnitt schneller.
 
-4. **Welche Heurisitik verwenden Sie und wo kann dies im Code gefunden werden? (kurze Erklärung)?**
+4. **Welche Heuristik verwenden Sie und wo kann dies im Code gefunden werden? (kurze Erklärung)**
 
-    Ich verwende zum Brechnen der Kosten einer Node die Manhattan Distanz.
-    Diese Kosten-Berechnung ist für beide Zielzustände seperat implementiert und kann in der node.cpp Datei in Zeilen 30-50 gefunden werden.
-    Die Funktionen funktionieren im Kern gleich aber verwenden verschiedene Goal_States zur Berechnung. Zuerst wird die Index-Distanz eines Elements zu seiner Ziel-Position berechnet. Diese Index-Distanz wird dann durch drei geteilt und abgerundet um die benötigten vertikalten Schritte des Elements zu seiner Ziel-Position zu berechnen. Um die benötigten horizontalen Schritte eines Elements zu seiner Ziel-Position zu erhalten wird die Index-Distanz mod 3 gerechnet. Diese Beiden Werte, horzontale und vertikale benötigte Schritt-Anzahl werden addiert und bilden die Kosten des einzelnen Elementes.
-    Um die Kosten des gesamten Feldes(der Node) zu erhalten werden also alle Element-Kosten addiert, was mithilfe der for-Schleife realisiert wird.
+    Ich verwende zur Berechnung der Kosten einer Node die Manhattan-Distanz, da diese Heuristik admisable ist.
+    Diese Kostenberechnung ist für beide Zielzustände separat implementiert und kann in der `node.cpp`-Datei in den Zeilen 21–41 gefunden werden.
+    Die Funktionen funktionieren im Kern gleich, verwenden aber verschiedene Zielzustände zur Berechnung. Zuerst wird die Indexdistanz eines Elements zu seiner Zielposition berechnet. Diese Indexdistanz wird dann durch drei geteilt und abgerundet, um die benötigten vertikalen Schritte des Elements zu seiner Zielposition zu berechnen. Um die benötigten horizontalen Schritte eines Elements zu seiner Zielposition zu erhalten, wird die Indexdistanz modulo 3 gerechnet. Diese beiden Werte, die horizontalen und vertikalen Schritte, werden addiert und ergeben die Kosten des einzelnen Elements.
+    Um die Kosten des gesamten Feldes (der Node) zu erhalten, werden alle Elementkosten addiert, was durch eine For-Schleife realisiert wird.
 
-5. **Wie ist ihre Goal() Funktion modelliert?**
+5. **Wie ist Ihre Goal()-Funktion modelliert?**
 
-    Meine Goal() Function, welche prüft ob das Probelm gelöst würde, ist in der solver.h Datei in Zeilen 55-61 zu finden. Sie prüft ob die derzeit untersuchte Node einen Zielzustand enthält(cost == 0), ist dies der Fall, wurde eine Lösung für das 8-Puzzle-Problem gefunden und der Pfad zu dieser Node wird ausgegeben. Es ist wichtig anzumerken, dass die derzeit untersuchte Node immer die, nach Suchstrategie definiert, günstigste ist, da sie vom Anfang der, mit der Suchstrategie priorisierten, Priority-Queue genommen wird.
-    Somit kann gewährleistet werden, dass z.B. A* immer die optimalste Lösung findet.
+    Meine `Goal()`-Funktion, die prüft, ob das Problem gelöst wurde, ist in der `solver.h`-Datei in den Zeilen 85-107 zu finden. Sie prüft, ob die derzeit untersuchte Node einen Zielzustand enthält (`cost == 0`). Ist dies der Fall, wurde eine Lösung für das 8-Puzzle-Problem gefunden. Wurde eine Lösung gefunden wird der Pfad zu der Lösung und Informationen zu den generierten Nodes ausgegeben, dannach wird der benutzte Speicher freigegeben und die `solve` Funktion endet. Es ist wichtig anzumerken, dass die derzeit untersuchte Node immer die günstigste ist, da sie aus dem Anfang der, nach Suchstrategie priorisierten, Priority-Queue genommen wird.
+    Somit kann gewährleistet werden, dass z. B. A* immer die optimalste Lösung findet.
 
-
-# Flowchart des Programm
+# Flowchart des Programms
 
 <div align="center">
-  <img src="image/Flowchart 8-puzzle.png" alt="Image description">
+  <img src="image/Flowchart2.png" alt="Image description">
 </div>
